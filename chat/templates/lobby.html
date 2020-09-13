@@ -1,0 +1,387 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Game-Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Almendra:wght@700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        #gaming {
+            display: none;
+        }
+        
+        #start {
+            visibility: hidden;
+        }
+        
+        #chance {
+            display: none;
+        }
+        
+        #draw {
+            display: none;
+        }
+        
+        #check {
+            display: none;
+        }
+        
+        #played {
+            display: none;
+        }
+        
+        .selected {
+            border: 2px solid green;
+        }
+        
+        #playing {
+            display: none;
+        }
+        
+        #chack {
+            display: none;
+        }
+        
+        body,
+        html {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        #starting {
+            background-image:url("{% static 'images/red.jpg' %}");
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 5%;
+        }
+        
+        .patta {
+            background-image:url("{% static 'images/card.jpg' %}");
+            height: 80%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 450px;
+            border-radius: 23px;
+            overflow: hidden;
+            font-family: 'Almendra', serif;
+        }
+        
+        li {
+            font-size: 25px;
+        }
+        
+        #gaming {
+            background-image:url("{% static 'images/back.jpg' %}");
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 5%;
+        }
+        
+        .show {
+            background-color: rgba(255, 255, 255, .15);
+            backdrop-filter: blur(5px);
+            color: white;
+            border-radius: 20px;
+            box-shadow: -15px 15px 4px rgb(75, 88, 88);
+        }
+        
+        #im:hover {
+            width: 120%;
+            height: 120%;
+        }
+        
+        .my-log {
+            padding: 5px;
+            padding-left: 3%;
+            background: #a8ff78;
+            background: linear-gradient(to right, #78ffd6, #a8ff78);
+            border-radius: 18px;
+            backdrop-filter: blur(5px);
+            color: white;
+            margin: 10px 2px 10px 30%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+            font-family: 'Roboto Slab', serif;
+            font-size: large;
+        }
+        
+        .other-log {
+            padding: 5px;
+            padding-left: 2%;
+            background: #654ea3;
+            background: linear-gradient(to right, #eaafc8, #654ea3);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            color: white;
+            margin: 10px 30% 10px 2px;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+            font-family: 'Roboto Slab', serif;
+            font-size: large;
+        }
+        
+        #naam {
+            padding-left: 3%;
+            margin-bottom: 0;
+            font-size: small;
+        }
+        
+         ::-webkit-scrollbar {
+            width: 6px;
+        }
+        /* Track */
+        
+         ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        /* Handle */
+        
+         ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+        /* Handle on hover */
+        
+         ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    {{ room_name|json_script:"room-name" }} {{ player|json_script:"player" }} {{ ids|json_script:"ids" }} {{sets|json_script:"sets"}}
+    <p id="chance">{{chance}}</p>
+    <p id="check">{{check}}</p>
+    <div id="starting">
+        <br>
+        <div class="patta container">
+            <div class="container pt-5">
+                <h2 class="text-center">Players</h2><br>
+                <section id="players">
+                    <ol id="lists">
+                        {%for all in all_players%}
+                        <li>
+                            {{all}}
+                        </li>
+                        {%endfor%}
+                    </ol>
+                </section>
+                <h5 class="text-center">Share Room-Code with friends to join</h5>
+                <h5 class="p-2 text-center" style="border: 5px double black;">༄༄༄༄༄ {{room_name}} ༄༄༄༄༄</h5>
+                {% if all_players%}
+                <h5 class="pt-3 text-center">Waiting for leader to start the game</h5>{%else%}
+                <h5 class="pt-3 text-center" id="wait">Waiting for other players to join</h5>
+                <h4 class="text-center">
+                    <button class="mt-4 text-center" id="start">Start-Game</button></h4> {%endif%}
+            </div>
+        </div>
+    </div>
+    <div id="gaming">
+        <div class="row" style="height: 100%;width: 100%;">
+            <div class="col-4 px-5 pb-5" style="height: inherit;">
+                <div class="container pt-3 show" style="height:100%">
+                    <h3 class="text-center" style="font-family: 'Roboto Slab', serif;font-size: 220%;"><b><b>Chat-Box</b></b>
+                    </h3>
+                    <div class="container px-0" style="height:85%;border:4px solid white;border-radius: 10px;">
+                        <div id="chat-log" style="overflow-y:auto;height:100%">
+                        </div>
+                    </div>
+                    <div class="container row pt-3">
+                        <div class="col-10 px-0">
+                            <input id="chat-message-input" type="text" style="width:100%">
+                        </div>
+                        <div class="col-2">
+                            <button style="border:none;background: transparent;outline: none;" id="chat-message-submit"><img id="im" src = "{% static 'images/send.png'%}"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-8">
+                <div class="col-7" style="background: linear-gradient(to right, #7c661f, #d5dd8a);margin: 0px 0px 0px 25%;border: 3px solid white;border-radius: 10px;height:10%">
+                    <h3 id="claim"></h3>
+                    <h4>Player {{chance}} is putting cards</h4>
+                    <h5>Player {{draw}} will draw cards</h5>
+                </div>
+                <div class="col-12" style="background: linear-gradient(to right, #a8e063, #56ab2f);margin: 2% 0px 8% 0px;border: 17px ridge #8a6e49;border-radius: 150px; height:75%">
+                    <div id="1"><img src="{% static 'icon/a.png' %}"></div>
+                    <div id="2"><img src="{% static 'icon/b.png' %}"></div>
+                    <div id="3"><img src="{% static 'icon/c.png' %}"></div>
+                    <div id="4"><img src="{% static 'icon/d.png' %}"></div>
+                    <section id="playing">
+                        <br>
+                        <section id="chack">
+                            <button id="checking">Click to Check</button>
+                            <button id="passing">Click to Pass</button>
+                        </section>
+                        <p>No. of Card Chosen <b id="total">0</b></p>
+                        <section id="master">
+                            <p>Enter the identity of the card</p>
+                            <input type="number" id="identity">
+                            <br>
+                        </section>
+                        <button id="throw">Throw Cards</button>
+                        <h4>Choose-Cards</h4>
+                    </section>
+                    <section id="khel">
+                        {%for i in sets%}
+                        <button class="select">{{i}}</button>{%endfor%}
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/reconnect.js' %}"></script>
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const playerName = JSON.parse(document.getElementById('player').textContent);
+        var ids = JSON.parse(document.getElementById('ids').textContent);
+        document.getElementById(ids).classList.add("bottom");
+        var a = (parseInt(ids)) % 4 + 1;
+        document.getElementById(a).classList.add("right")
+        a = a % 4 + 1
+        document.getElementById(a).classList.add("top")
+        a = a % 4 + 1
+        document.getElementById(a).classList.add("left")
+        const chatSocket = new ReconnectingWebSocket(
+            'ws://' +
+            window.location.host +
+            '/ws/chat/' +
+            roomName +
+            '/'
+        );
+        chatSocket.onopen = function(e) {
+            console.log("\n\nconnented\n\n")
+            console.log("\n\n" + player)
+            chatSocket.send(JSON.stringify({
+                'player': playerName,
+                'gid': roomName
+            }));
+        };
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if (data.message) {
+                console.log(data);
+                if (data.name == ids) {
+                    $("#chat-log").append("<div class='my-log'>" + data.message + "</div>");
+                } else {
+                    $("#chat-log").append("<div class='other-log'><b><i><p id='naam'>~" + data.naam + "</p></i></b>" + data.message + "</div>");
+                };
+                $('#chat-log').scrollTop(100000);
+            };
+            if (data.player) {
+                if ($("#lists li").length < 4) {
+                    $("#lists").append("<li>" + data.player + "</li>");
+                    if ($("#lists li").length == 4) {
+                        $("#wait").css("visibility", "hidden");
+                        $("#start").css("visibility", "visible");
+                    };
+                };
+            };
+            if (data.start) {
+                $("#starting").css('display', 'none');
+                $("#gaming").css('display', 'block');
+            };
+            if (data.throwing) {
+                $("#check").text("1");
+                $("#chance").text(data.chance);
+                $("#claim").text("Player claimed that he has thrown " + data.total + " cards of type " + data.typ);
+                $("#identity").val(parseInt(data.typ));
+            };
+            if (data.take) {
+                for (i in data.cards) {
+                    $("#khel").append("<button class='select'>" + data.cards[i] + "</button>");
+                };
+                $("#chack").text("0");
+            };
+            if (data.modify) {
+                $("#chance").text(data.chance);
+            };
+            chance = $("#chance").text();
+            console.log(chance);
+            if (chance == ids) {
+                $("#playing").css("display", "block");
+            } else {
+                $("#playing").css("display", "none");
+            };
+            check = $("#check").text();
+            if (check == "1") {
+                $("#chack").css("display", "block");
+            } else {
+                $("#chack").css("display", "none");
+            };
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+        $('#chat-message-submit').click(function() {
+            message = $("#chat-message-input").val();
+            console.log(message);
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'gid': roomName,
+                'name': ids,
+                'naam': playerName,
+            }));
+            $("#chat-message-input").val("");
+        });
+        $("#start").click(function() {
+            chatSocket.send(JSON.stringify({
+                'start': "start",
+                'gid': roomName
+            }));
+        });
+        $(document).on('click', '.select', function() {
+            $(this).toggleClass("selected");
+            $("#total").text($(".selected").length);
+        });
+        $("#throw").click(function() {
+            var chance = $("#chance").text();
+            var cards = [];
+            var unselected = [];
+            var typ = $("#identity").val();
+            $('.selected').each(function() {
+                cards.push(parseInt($(this).text()));
+            });
+            chatSocket.send(JSON.stringify({
+                'action': "throw",
+                'chance': chance,
+                'cards': cards,
+                'typ': typ,
+                'gid': roomName
+            }));
+            $(".selected").remove();
+        });
+
+        $("#checking").click(function() {
+            chatSocket.send(JSON.stringify({
+                'action': "check",
+                'checker': ids,
+                'gid': roomName
+            }));
+
+        });
+        $("#passing").click(function() {
+            chatSocket.send(JSON.stringify({
+                'pass': "pass",
+                'gid': roomName,
+            }));
+        });
+    </script>
+</body>
+
+</html>

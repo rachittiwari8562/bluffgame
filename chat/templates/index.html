@@ -1,0 +1,79 @@
+<!-- chat/templates/chat/index.html -->
+{% load static%}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>bluff</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        body,
+        html {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        #back {
+            background-image:url("{% static 'images/start.jpg' %}");
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 10%;
+        }
+        
+        #con {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .22);
+            overflow: hidden;
+            width: 470px;
+            margin-left: 10%;
+        }
+        
+        input {
+            background-color: #eee;
+            border: none;
+            padding: 12px 15px;
+            margin: 15px!important;
+        }
+        
+        button {
+            box-shadow: 7px 8px 5px rgb(206, 202, 202);
+            border: 1px solid #ff4b2b;
+            background-color: #ff7878;
+            background-image: linear-gradient(315deg, #ff7878 0%, #ff0000 74%);
+            cursor: default;
+            transition: all .3s;
+        }
+        
+        button:hover {
+            border: none;
+            background-color: #3bb78f;
+            background-image: linear-gradient(315deg, #3bb78f 0%, #0bab64 74%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="back">
+        <div class="container p-5 " id="con">
+            <h2 class="text-center" style="font-weight: 1000;">Welcome to Bluff</h2>
+            <div class="form-container text-center">
+                <form method="POST">{%csrf_token%}
+                    <input id="name" type="text" name="name" placeholder="Enter your name" required>
+                    <button class="btn btn-send mt-5 px-5 py-2 text-white" style="border-radius:6px;" type="submit" value="create" name="action"><b>Create Game</b></button>
+                    <h5 class="pt-4">OR</h5>
+                    <input type="text" id="roomcode" name="code" placeholder="Enter room code">
+                    <button class="btn btn-send mt-5 px-5 py-2 text-white" style="border-radius:5px;" value="join" name="action"><b>Join Game</b></button>
+                    <h6 id="message" class="pt-4 text-danger"><i>{{message}}</i></h6>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
