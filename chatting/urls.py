@@ -18,7 +18,7 @@ from django.urls import path
 from django.conf.urls import include
 from django.views.generic import RedirectView
 urlpatterns = [
-    path('', RedirectView.as_view(url='catalog/', permanent=True)),
+    path('', RedirectView.as_view(url='chat/', permanent=True)),
     path('admin/', admin.site.urls),
     path('chat/', include('chat.urls')),
 ]

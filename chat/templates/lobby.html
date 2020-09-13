@@ -256,7 +256,7 @@
         document.getElementById(a).classList.add("top")
         a = a % 4 + 1
         document.getElementById(a).classList.add("left")
-        const chatSocket = new ReconnectingWebSocket(
+        const chatSocket = new WebSocket(
             'ws://' +
             window.location.host +
             '/ws/chat/' +
