@@ -25,7 +25,7 @@ SECRET_KEY = '3)jy6mf%#@apop4(5^ks)fsyrfytt0w9%yql$^!&iswpuso*d('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['blufgame.herokuapp.com']
 
 
 # Application definition
