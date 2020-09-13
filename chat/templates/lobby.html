@@ -257,7 +257,7 @@
         a = a % 4 + 1
         document.getElementById(a).classList.add("left")
         const chatSocket = new WebSocket(
-            'wss://' +
+            'ws://' +
             window.location.host +
             '/ws/chat/' +
             roomName +
