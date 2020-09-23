@@ -1,10 +1,11 @@
-{%load static%}
+{%load static%} {% load to_image %}
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8" />
     <title>Game-Room</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Almendra:wght@700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -34,7 +35,7 @@
         }
         
         .selected {
-            border: 2px solid green;
+            border: 5px solid #21826b
         }
         
         #playing {
@@ -95,8 +96,8 @@
         }
         
         #im:hover {
-            width: 120%;
-            height: 120%;
+            width: 110%;
+            height: 110%;
         }
         
         .my-log {
@@ -155,8 +156,123 @@
          ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+        
+        .bottom {
+            position: absolute;
+            z-index: 2;
+            top: 105%;
+            left: 47%;
+        }
+        
+        .right {
+            position: absolute;
+            z-index: 2;
+            top: 40%;
+            left: 96%;
+        }
+        
+        .top {
+            position: absolute;
+            z-index: 2;
+            left: 47%;
+        }
+        
+        .left {
+            position: absolute;
+            z-index: 2;
+            top: 40%;
+            left: -0.5%;
+        }
+        
+        .select {
+            width: 70px;
+            border-radius: 10px;
+            padding: 0;
+        }
+        
+        #khel {
+            position: absolute;
+            top: 60%;
+            text-align: center;
+        }
+        
+        #center {
+            display: none;
+            width: 160px;
+            position: absolute;
+            top: 20%;
+        }
+        
+        #kitne {
+            margin: 0;
+            width: fit-content;
+            border-radius: 30%;
+            background: aqua;
+            padding: 10px;
+            font-weight: bolder;
+            border: 5px solid white;
+        }
+        
+        #moving-cards {
+            display: none;
+            position: absolute;
+            width: 140px;
+        }
+        
+        #info {
+            position: absolute;
+            top: -55px;
+            left: -4px;
+            background: aquamarine;
+            padding-left: 15px;
+            padding-right: 15px;
+            border-radius: 4px;
+            border: 2px solid white;
+            display: none;
+        }
+        
+        #winner {
+            display: none;
+            position: absolute;
+            background: #159957;
+            background: -webkit-linear-gradient(to right, #155799, #159957);
+            background: linear-gradient(to right, #155799, #159957);
+            color: white;
+            width: 62%;
+            top: 8%;
+            z-index: 5;
+            border: 12px solid white;
+            height: 86%;
+            backdrop-filter: blur(8px);
+            left: 20%;
+            border-radius: 20px;
+            font-family: fantasy;
+        }
+        
+        #setting:hover {
+            transform: rotate(360deg);
+            cursor: pointer;
+        }
+        
+        #icon-bar {
+            display: none;
+            transition: all 0.2s ease;
+        }
+        
+        .icon {
+            transition: transform .3s;
+        }
+        
+        .icon:hover {
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+        
+        .confirm {
+            border: 4px solid #00fb87;
+            border-radius: 50%;
+        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
@@ -166,6 +282,21 @@
     {{ room_name|json_script:"room-name" }} {{ player|json_script:"player" }} {{ ids|json_script:"ids" }} {{sets|json_script:"sets"}}
     <p id="chance">{{chance}}</p>
     <p id="check">{{check}}</p>
+    <div style="display:none">
+        <img src="{% static 'images/0.jpg' %}">
+        <img src="{% static 'images/1.jpg' %}">
+        <img src="{% static 'images/2.jpg' %}">
+        <img src="{% static 'images/3.jpg' %}">
+        <img src="{% static 'images/4.jpg' %}">
+        <img src="{% static 'images/5.jpg' %}">
+        <img src="{% static 'images/6.jpg' %}">
+        <img src="{% static 'images/7.jpg' %}">
+        <img src="{% static 'images/8.jpg' %}">
+        <img src="{% static 'images/9.jpg' %}">
+        <img src="{% static 'images/10.jpg' %}">
+        <img src="{% static 'images/11.jpg' %}">
+        <img src="{% static 'images/12.jpg' %}">
+    </div>
     <div id="starting">
         <br>
         <div class="patta container">
@@ -211,35 +342,83 @@
                 </div>
             </div>
             <div class="row col-8">
-                <div class="col-7" style="background: linear-gradient(to right, #7c661f, #d5dd8a);margin: 0px 0px 0px 25%;border: 3px solid white;border-radius: 10px;height:10%">
-                    <h3 id="claim"></h3>
-                    <h4>Player {{chance}} is putting cards</h4>
-                    <h5>Player {{draw}} will draw cards</h5>
+                <div id="icon-bar" style="position: absolute;z-index: 10;width: 42%;top: 6%;left: 56%;color: aliceblue;background: linear-gradient(to right, #2980b9, #6dd5fa, #ffffff);border-radius: 30px;">
+                    <h3 class="text-center pt-2"><b>Choose Your Avatar</b></h3>
+                    <img class="icon m-5" src="{% static 'icon/a.png' %}">
+                    <img class="icon m-5" src="{% static 'icon/b.png' %}">
+                    <img class="icon m-5" src="{% static 'icon/c.png' %}">
+                    <img class="icon m-5" src="{% static 'icon/d.png' %}">
+                    <img class="icon m-5" src="{% static 'icon/e.png' %}">
+                    <img class="icon m-5" src="{% static 'icon/f.png' %}">
+                    <img class="icon m-5" src="{% static 'icon/g.png' %}">
+                    <img class="icon m-5" src="{% static 'icon/h.png' %}">
+                    <img class="icon m-5" src="{% static 'icon/i.png' %}">
+                    <div class="pb-4 text-center">
+                        <button class="save text-center">Save-Avatar</button>
+                    </div>
                 </div>
-                <div class="col-12" style="background: linear-gradient(to right, #a8e063, #56ab2f);margin: 2% 0px 8% 0px;border: 17px ridge #8a6e49;border-radius: 150px; height:75%">
+                <span id="setting" style="opacity: 1;position: absolute;right: 2%;top: 2%;transition: transform 0.5s ease;font-size: 25px;">⚙️</span>
+                <div id="winner" class="text-center">
+                    <h2 class="pt-3"><b><u>Game - Over</u></b></h2>
+                    <div>
+                        <img src="/static/icon/confetti.png" class="p-2">
+                        <img src="/static/icon/confetti.png" class="p-2">
+                        <img src="/static/icon/confetti.png" class="p-2">
+                        <img src="/static/icon/confetti.png" class="p-2">
+                        <img src="/static/icon/confetti.png" class="p-2">
+                        <img src="/static/icon/confetti.png" class="p-2">
+                        <img src="/static/icon/confetti.png" class="p-2">
+                        <img src="/static/icon/confetti.png" class="p-2">
+                        <img src="/static/icon/confetti.png" class="p-2">
+                    </div>
+                    <div class="pt-4" id="winner-icon"></div>
+                    <div id="winner-name" class="pt-5 pb-5 text-center" style="font-size: 24px;font-weight: bolder;font-family: fantasy;"></div>
+                    <div class="text-center pt-2"><img src="/static/icon/balloons.png"><img src="/static/icon/balloons.png">
+                        <img src="/static/icon/fireworks.png"><img src="/static/icon/fireworks.png"><a href="{% url 'index' %}"><button id="exit" class="p-1">Exit-Game</button></a><img src="/static/icon/fireworks.png">
+                        <img src="/static/icon/fireworks.png">
+                        <img src="/static/icon/balloons.png"><img src="/static/icon/balloons.png"></div>
+                </div>
+                <div class="afterwin col-7" style="margin: 0px 0px 0px 25%;height:10%">
+                    <h3 style="font-weight: bolder;margin-top: 4%;color: floralwhite;">Claim:</h3>
+                    <div id="claim" style="position: absolute;top:3%;left:25%;width:10%;border-radius:10px;padding:0;"></div>
+                </div>
+                <div class="afterwin col-12 d-flex justify-content-center" style="background: linear-gradient(to right, #a8e063, #56ab2f);margin: 2% 0px 8% 0px;border: 17px ridge #8a6e49;border-radius: 150px; height:75%;position: relative;">
+                    <div id="bluffing" style="visibility:hidden;position: absolute;z-index: 5;top: 38%;border: 4px solid #099db5;padding: 15px;background: aqua;color: white;border-radius: 22px;font-weight: bolder;font-size: large;box-shadow: 9px 8px 5px 5px #d3d3d3c4;">
+                    </div>
                     <div id="1"><img src="{% static 'icon/a.png' %}"></div>
                     <div id="2"><img src="{% static 'icon/b.png' %}"></div>
                     <div id="3"><img src="{% static 'icon/c.png' %}"></div>
                     <div id="4"><img src="{% static 'icon/d.png' %}"></div>
-                    <section id="playing">
-                        <br>
-                        <section id="chack">
-                            <button id="checking">Click to Check</button>
-                            <button id="passing">Click to Pass</button>
-                        </section>
-                        <p>No. of Card Chosen <b id="total">0</b></p>
-                        <section id="master">
-                            <p>Enter the identity of the card</p>
-                            <input type="number" id="identity">
-                            <br>
-                        </section>
-                        <button id="throw">Throw Cards</button>
-                        <h4>Choose-Cards</h4>
-                    </section>
-                    <section id="khel">
+                    <div id="center" styel="margin-top: 3%;">
+                        <h6 id="kitne" style="    position: absolute;top: 5%;left: 11%;">0</h6><img src="{% static 'images/group.png' %}" style="width:100%">
+                    </div>
+                    <div id="khel">
                         {%for i in sets%}
-                        <button class="select">{{i}}</button>{%endfor%}
-                    </section>
+                        <button class="select"><img style="width:100%" src ="{% static i|to_image %}"></button>{%endfor%}
+                    </div>
+                    <div id="playing" style="position: absolute;width: 100%;top:98%" class="row">
+                        <div id="master" class="row col-4">
+                            <div class="col-5">
+                                <p class="p-1 mt-4" style="background: antiquewhite;text-align: center;border-radius: 30px;color: #1eefe6;"><b> Claim :-</b></p>
+                            </div>
+                            <div class="row col-7">
+                                <input style="display:none" type="number" id="identity" value=0>
+                                <button style="border:none;background: transparent;outline: none;" id="arrow-left"><img style="width:85%" src="{% static 'images/al.png' %}"></button>
+                                <div style="width: 36%;border-radius: 10px;" id="tanziro"><img style="width:100%" src="/static/images/0.jpg"></div>
+                                <button style="border:none;background: transparent;outline: none;" id="arrow-right"><img style="width:85%" src="{% static 'images/ar.png' %}"></button>
+                            </div>
+                        </div>
+                        <div class="pl-4 pr-0 col-5">
+                            <button id="throw" style="margin-left:36%">Throw Cards</button>
+                            <div id="chack" style="margin-top: 3%;">
+                                <button id="checking">Click to Check</button>
+                                <button id="passing" style="margin-left:36%">Click to Pass</button>
+                            </div>
+                        </div>
+                        <div class="pl-0 col-3">
+                            <h4 style="margin-top: 12%;color:white">No. of Card Chosen <b id="total">0</b></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -256,7 +435,7 @@
         document.getElementById(a).classList.add("top")
         a = a % 4 + 1
         document.getElementById(a).classList.add("left")
-        const chatSocket = new WebSocket(
+        const chatSocket = new ReconnectingWebSocket(
             'ws://' +
             window.location.host +
             '/ws/chat/' +
@@ -264,8 +443,6 @@
             '/'
         );
         chatSocket.onopen = function(e) {
-            console.log("\n\nconnented\n\n")
-            console.log("\n\n" + player)
             chatSocket.send(JSON.stringify({
                 'player': playerName,
                 'gid': roomName
@@ -273,64 +450,143 @@
         };
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            if (data.message) {
-                console.log(data);
-                if (data.name == ids) {
-                    $("#chat-log").append("<div class='my-log'>" + data.message + "</div>");
-                } else {
-                    $("#chat-log").append("<div class='other-log'><b><i><p id='naam'>~" + data.naam + "</p></i></b>" + data.message + "</div>");
+            $("#" + $("#chance").text()).css({
+                "background": "none",
+                "border": "none",
+                "border-radius": "0px"
+            });
+            if (data.winner) {
+                $(".afterwin").css("visibility", "hidden");
+                $("#winner-name").html(data.winner + " is Winner");
+                $("#winner-icon").html($("#" + data.icon).html());
+                $("#winner").css("display", "block");
+            } else {
+                if (data.changingicon) {
+                    $("#" + data.by).html('<img src="/static/icon/' + data.icon + '.png" >');
+                }
+                if (data.passing) {
+                    $("#" + $("#chance").text()).append("<div id='info'>Pass</div>");
+                    $("#info").css("display", "block");
+                    $("#info").delay(2400).fadeOut();
+                    setTimeout(function() {
+                        $("#info").remove();
+                    }, 2400);
                 };
-                $('#chat-log').scrollTop(100000);
-            };
-            if (data.player) {
-                if ($("#lists li").length < 4) {
-                    $("#lists").append("<li>" + data.player + "</li>");
-                    if ($("#lists li").length == 4) {
-                        $("#wait").css("visibility", "hidden");
-                        $("#start").css("visibility", "visible");
+                if (data.bluff) {
+                    $("#bluffing").css("visibility", 'visible');
+                    $("#bluffing").html("Cards are being checked <div class='spinner-grow text-light' role ='status'></div >");
+                    if (data.bluff == "yes") {
+                        setTimeout(function() {
+                            $("#bluffing").html("Caught bluffing!!!!")
+                        }, 1000);
+                    } else {
+                        setTimeout(function() {
+                            $("#bluffing").html("Player was not cheating")
+                        }, 1000);
+                    };
+                    setTimeout(function() {
+                        $("#bluffing").css("visibility", "hidden");
+                    }, 3000);
+                };
+                if (data.message) {
+                    if (data.name == ids) {
+                        $("#chat-log").append("<div class='my-log'>" + data.message + "</div>");
+                    } else {
+                        $("#chat-log").append("<div class='other-log'><b><i><p id='naam'>~" + data.naam + "</p></i></b>" + data.message + "</div>");
+                    };
+                    $('#chat-log').scrollTop(100000);
+                };
+                if (data.player) {
+                    if ($("#lists li").length < 4) {
+                        $("#lists").append("<li>" + data.player + "</li>");
+                        if ($("#lists li").length == 4) {
+                            $("#wait").css("visibility", "hidden");
+                            $("#start").css("visibility", "visible");
+                        };
                     };
                 };
-            };
-            if (data.start) {
-                $("#starting").css('display', 'none');
-                $("#gaming").css('display', 'block');
-            };
-            if (data.throwing) {
-                $("#check").text("1");
-                $("#chance").text(data.chance);
-                $("#claim").text("Player claimed that he has thrown " + data.total + " cards of type " + data.typ);
-                $("#identity").val(parseInt(data.typ));
-            };
-            if (data.take) {
-                for (i in data.cards) {
-                    $("#khel").append("<button class='select'>" + data.cards[i] + "</button>");
+                if (data.start) {
+                    $("#starting").css('display', 'none');
+                    $("#gaming").css('display', 'block');
                 };
-                $("#chack").text("0");
-            };
-            if (data.modify) {
-                $("#chance").text(data.chance);
-            };
-            chance = $("#chance").text();
-            console.log(chance);
-            if (chance == ids) {
-                $("#playing").css("display", "block");
-            } else {
-                $("#playing").css("display", "none");
-            };
-            check = $("#check").text();
-            if (check == "1") {
-                $("#chack").css("display", "block");
-            } else {
-                $("#chack").css("display", "none");
+                if (data.throwing) {
+                    $("#" + $("#chance").text()).append("<div id='info'>Throwing</div>");
+                    $("#info").css("display", "block");
+                    $("#info").delay(2400).fadeOut();
+                    setTimeout(function() {
+                        $("#info").remove();
+                    }, 2400);
+                    $("#check").text("1");
+                    $("#chance").text(data.chance);
+                    $("#identity").val(parseInt(data.typ));
+                    $("#claim").html('<img style="width:100%" src ="/static/images/' + data.typ + '.jpg">');
+                    $("#tanziro").html('<img style="width:100%" src ="/static/images/' + data.typ + '.jpg">');
+                    $("#kitne").text(parseInt($("#kitne").text()) + parseInt(data.total));
+                    $("#center").css("display", 'block');
+                };
+                if (data.take) {
+                    $("#center").css("display", 'none');
+                    for (i in data.cards) {
+                        $("#khel").append('<button class="select" style="margin:5px"><img style="width:100%" src ="/static/images/' + data.cards[i] + '.jpg"></button>');
+                    };
+                    $("#check").text("0");
+                    $("#kitne").text("0");
+                };
+                if (data.changing) {
+                    $("#center").css("display", 'none');
+                    $("#kitne").text("0");
+                    $("#check").text("0");
+                }
+                if (data.modify) {
+                    $("#chance").text(data.chance);
+                };
+                chance = $("#chance").text();
+                $("#" + chance).css({
+                    "background": "#0a00006e",
+                    "border": "6px solid #ccff00",
+                    "border-radius": "15 px"
+                });
+                if (chance == ids) {
+                    $("#playing").css("display", "flex");
+                } else {
+                    $("#playing").css("display", "none");
+                };
+                check = $("#check").text();
+                if (check == "1") {
+                    $("#chack").css("display", "block");
+                    $('#master').css("visibility", "hidden");
+
+                } else {
+                    $("#chack").css("display", "none");
+                    $('#master').css("visibility", "visible");
+                };
             };
         };
-
         chatSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
+        $("#arrow-left").click(function() {
+            var value = $("#identity").val()
+            if (value != "0") {
+                value = parseInt(value) - 1
+            } else {
+                value = 12
+            };
+            $("#identity").val(value);
+            $("#tanziro").html('<img style="width:100%" src ="/static/images/' + value + '.jpg">');
+        });
+        $("#arrow-right").click(function() {
+            var value = $("#identity").val()
+            if (value != "12") {
+                value = parseInt(value) + 1
+            } else {
+                value = 0
+            };
+            $("#identity").val(value);
+            $("#tanziro").html('<img style="width:100%" src ="/static/images/' + value + '.jpg">');
+        });
         $('#chat-message-submit').click(function() {
             message = $("#chat-message-input").val();
-            console.log(message);
             chatSocket.send(JSON.stringify({
                 'message': message,
                 'gid': roomName,
@@ -355,15 +611,22 @@
             var unselected = [];
             var typ = $("#identity").val();
             $('.selected').each(function() {
-                cards.push(parseInt($(this).text()));
+                var k = $(this).html();
+                var l = k.split("/")[3];
+                l = l.split(".")[0];
+                cards.push(parseInt(l));
             });
-            chatSocket.send(JSON.stringify({
-                'action': "throw",
-                'chance': chance,
-                'cards': cards,
-                'typ': typ,
-                'gid': roomName
-            }));
+            if (cards.length != 0) {
+                chatSocket.send(JSON.stringify({
+                    'action': "throw",
+                    'chance': chance,
+                    'cards': cards,
+                    'typ': typ,
+                    'gid': roomName
+                }));
+            } else {
+                alert("Either choose atleast 1 card or pass the chance");
+            };
             $(".selected").remove();
         });
 
@@ -378,6 +641,23 @@
         $("#passing").click(function() {
             chatSocket.send(JSON.stringify({
                 'pass': "pass",
+                'gid': roomName,
+            }));
+        });
+        $("#setting").click(function() {
+            $('#icon-bar').toggle();
+        });
+        $(".icon").click(function() {
+            $(".confirm").removeClass("confirm");
+            $(this).addClass("confirm");
+        });
+        $(".save").click(function() {
+            var icon = $(".confirm").attr('src');
+            icon = icon.split(".")[0]
+            icon = icon[icon.length - 1]
+            chatSocket.send(JSON.stringify({
+                'by': ids,
+                'icon': icon,
                 'gid': roomName,
             }));
         });

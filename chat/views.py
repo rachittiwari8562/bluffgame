@@ -12,9 +12,7 @@ def index(request):
     elif request.method=="POST":
         post=request.POST
         if post['name']=="":
-            print("/n//nenter name/n/n")
             return render(request, 'index.html')
-        print(post)
         if post['action']=="create":
             gameid=Gameid()
             key=random.choice(generate)+random.choice(generate)+random.choice(generate)+random.choice(generate)+random.choice(generate)
@@ -25,8 +23,6 @@ def index(request):
             random.shuffle(k)
             gameid.decks=json.dumps(k)
             gameid.save()
-            print('\n\nusercreated\n\n')
-            print(key)
             return redirect(reverse('room',args=[key]))
         elif post['action']=="join":
             gameid=Gameid.objects.filter(gid=post['code'])
@@ -38,14 +34,11 @@ def index(request):
                     gameid.players+= "\n"+post['name']
                     gameid.counting+=str((int(gameid.counting[-1])+1))
                     gameid.save()
-                    print("\n\nuseradded\n\n")
                     return redirect(reverse('room',args=[post['code']]))
                 else:
-                    print("\n\nLIMIT EXCEEDED\n\n")
-                    return render(request, 'index.html',{'message':'~~~Room limit exceeded.Join another room'})
+                    return render(request, 'index.html',{'message':'~~~ Room limit exceeded.Join another room'})
             else:
-                print("not found")
-                return render(request, 'index.html',{'message':'~~~Room not found . Enter correct room-code'})
+                return render(request, 'index.html',{'message':'~~~ Room not found . Enter correct room-code'})
 def room(request, room_name):
     if Gameid.objects.filter(gid=room_name):
         gameid=Gameid.objects.filter(gid=room_name)[0]

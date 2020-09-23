@@ -58,42 +58,73 @@ class ChatConsumer(WebsocketConsumer):
                     'type': 'start',
                 }
             )
+        if 'icon'  in text_data_json:
+            #changing icon
+                async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'icon',
+                    'data':text_data_json
+                }
+            )
         if 'action' in text_data_json:
             if text_data_json['action']=="throw":
-                chance=text_data_json['chance']
-                gameid.passing=0
-                gameid.by=self.channel_name
-                gameid.by2=chance
-                if chance=="1":
-                    gameid.deck1-=len(text_data_json['cards'])
-                elif chance=="2":
-                    gameid.deck2-=len(text_data_json['cards'])
-                elif chance=="3":
-                    gameid.deck3-=len(text_data_json['cards'])
-                else:
-                    gameid.deck4-=len(text_data_json['cards'])
-                if gameid.played:
-                    gameid.played=json.dumps(json.loads(gameid.played)+text_data_json['cards'])
-                else:
-                    gameid.played=json.dumps(text_data_json['cards'])
-                gameid.stock=json.dumps(text_data_json['cards'])
-                chance =(int(chance))%4+1
-                gameid.chance=str(chance)
-                if gameid.typ==-1:
-                    gameid.typ=text_data_json['typ']
-                gameid.save()
-            #sending player name to group
-                async_to_sync(self.channel_layer.group_send)(
+                if gameid.deck1==0 or gameid.deck2==0 or gameid.deck3==0 or gameid.deck4==0:
+                    if gameid.deck1==0:
+                        winner=gameid.players.split("\n")[0]
+                        icon=1
+                    elif gameid.deck2==0:
+                        winner=gameid.players.split("\n")[1]
+                        icon=2
+                    elif gameid.deck3==0:
+                        winner=gameid.players.split("\n")[2]
+                        icon=3
+                    elif gameid.deck4==0:
+                        winner=gameid.players.split("\n")[3]
+                        icon=4
+                    gameid.delete()
+                    async_to_sync(self.channel_layer.group_send)(
                     self.room_group_name,
+                        {
+                            'type': 'win',
+                            'winner':winner,
+                            'icon':icon
+                        }
+                        )
+                else:
+                    chance=text_data_json['chance']
+                    gameid.passing=0
+                    gameid.by=self.channel_name
+                    gameid.by2=chance
+                    if chance=="1":
+                        gameid.deck1-=len(text_data_json['cards'])
+                    elif chance=="2":
+                        gameid.deck2-=len(text_data_json['cards'])
+                    elif chance=="3":
+                        gameid.deck3-=len(text_data_json['cards'])
+                    else:
+                        gameid.deck4-=len(text_data_json['cards'])
+                    if gameid.played:
+                        gameid.played=json.dumps(json.loads(gameid.played)+text_data_json['cards'])
+                    else:
+                        gameid.played=json.dumps(text_data_json['cards'])
+                    gameid.stock=json.dumps(text_data_json['cards'])
+                    chance =(int(chance))%4+1
+                    gameid.chance=str(chance)
+                    if gameid.typ==-1:
+                        gameid.typ=text_data_json['typ']
+                    gameid.save()
+                #sending player name to group
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name,
 
-                    {
-                        'type': 'action',
-                        'state': text_data_json,
-                        'chance': chance
-                    }
-                )
+                        {
+                            'type': 'action',
+                            'state': text_data_json,
+                            'chance': chance
+                        }
+                    )
             elif text_data_json['action']=="check":
-                print("checking")
                 arr=json.loads(gameid.stock)
                 arr2=json.loads(gameid.played)
                 gameid.stock=""
@@ -104,19 +135,48 @@ class ChatConsumer(WebsocketConsumer):
                 ch=[gameid.typ]*len(arr)
                 gameid.typ=-1
                 if ch==oth:
-                    chance=gameid.chance
-                    if chance=="1":
-                        gameid.deck1+=len(arr2)
-                    elif chance=="2":
-                        gameid.deck2+=len(arr2)
-                    elif chance=="3":
-                        gameid.deck3+=len(arr2)
+                    if gameid.deck1==0 or gameid.deck2==0 or gameid.deck3==0 or gameid.deck4==0:
+                        if gameid.deck1==0:
+                            winner=gameid.players.split("\n")[0]
+                            icon=1
+                        elif gameid.deck2==0:
+                            winner=gameid.players.split("\n")[1]
+                            icon=2
+                        elif gameid.deck3==0:
+                            winner=gameid.players.split("\n")[2]
+                            icon=3
+                        elif gameid.deck4==0:
+                            winner=gameid.players.split("\n")[3]
+                            icon=4
+                        gameid.delete()
+                        async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name,
+                            {
+                                'type': 'win',
+                                'winner':winner,
+                                'icon':icon
+                            }
+                            )
                     else:
-                        gameid.deck4+=len(arr2)
-                    self.send(text_data=json.dumps({
-                        'take':"take",
-                        'cards': arr2,
-                    }))
+                        chance=gameid.chance
+                        if chance=="1":
+                            gameid.deck1+=len(arr2)
+                        elif chance=="2":
+                            gameid.deck2+=len(arr2)
+                        elif chance=="3":
+                            gameid.deck3+=len(arr2)
+                        else:
+                            gameid.deck4+=len(arr2)
+                        self.send(text_data=json.dumps({
+                            'take':"take",
+                            'cards': arr2,
+                        }))
+                        async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name,
+                        {
+                            'type':'bluff',
+                            'bluff':"no"
+                        })
                 else:
                     chance=str(gameid.by2)
                     gameid.chance=chance
@@ -135,6 +195,17 @@ class ChatConsumer(WebsocketConsumer):
                         'cards': arr2,
                         'by':gameid.by,
                     })
+                    async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type':'bluff',
+                        'bluff':"yes"
+                    })
+                async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type':'changing',
+                })
                 async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
@@ -148,10 +219,38 @@ class ChatConsumer(WebsocketConsumer):
             gameid.chance=chance
             pas=gameid.passing
             if pas==3:
-                gameid.passing=0
-                gameid.played=""
-                gameid.played=""
-                gameid.typ=-1
+                if gameid.deck1==0 or gameid.deck2==0 or gameid.deck3==0 or gameid.deck4==0:
+                    if gameid.deck1==0:
+                        winner=gameid.players.split("\n")[0]
+                        icon=1
+                    elif gameid.deck2==0:
+                        winner=gameid.players.split("\n")[1]
+                        icon=2
+                    elif gameid.deck3==0:
+                        winner=gameid.players.split("\n")[2]
+                        icon=3
+                    elif gameid.deck4==0:
+                        winner=gameid.players.split("\n")[3]
+                        icon=4
+                    gameid.delete()
+                    async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                        {
+                            'type': 'win',
+                            'winner':winner,
+                            'icon':icon
+                        }
+                        )
+                else:
+                    gameid.passing=0
+                    gameid.played=""
+                    gameid.played=""
+                    gameid.typ=-1
+                    async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                            'type':'changing',
+                    })
             else:
                 gameid.passing+=1
             gameid.save()
@@ -159,7 +258,8 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                     'type':'modify',
-                    'chance':chance
+                    'chance':chance,
+                    'message':'passing'
             })
 
 
@@ -207,8 +307,35 @@ class ChatConsumer(WebsocketConsumer):
                             'take':"take",
                             'cards': event['cards'],
                         }))
-    def modify(self,event):
+    def changing(self,event):
         self.send(text_data=json.dumps({
-            'modify':"modify",
-            'chance':event['chance'],
+            'changing':'changing',
             }))
+    def modify(self,event):
+        if 'message' in event:
+            self.send(text_data=json.dumps({
+                'modify':"modify",
+                'chance':event['chance'],
+                'passing':'passing',
+                }))
+        else:
+            self.send(text_data=json.dumps({
+                'modify':"modify",
+                'chance':event['chance'],
+                }))
+    def bluff(self,event):
+        self.send(text_data=json.dumps({
+            'bluff':event['bluff']
+        }))
+    def win(self,event):
+        self.send(text_data=json.dumps({
+            'winner':event['winner'],
+            'icon':event['icon']
+        }))
+    def icon(self,event):
+        data=event['data']
+        self.send(text_data=json.dumps({
+            'by':data['by'],
+            'icon':data['icon'],
+            'changingicon':"1"
+        }))

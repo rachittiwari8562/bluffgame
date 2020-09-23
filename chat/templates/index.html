@@ -64,11 +64,11 @@
             <h2 class="text-center" style="font-weight: 1000;">Welcome to Bluff</h2>
             <div class="form-container text-center">
                 <form method="POST">{%csrf_token%}
-                    <input id="name" type="text" name="name" placeholder="Enter your name" required>
+                    <input class="mb-5" id="name" type="text" name="name" placeholder="Enter your name" required>
                     <button class="btn btn-send mt-5 px-5 py-2 text-white" style="border-radius:6px;" type="submit" value="create" name="action"><b>Create Game</b></button>
-                    <h5 class="pt-4">OR</h5>
+                    <h5 class="pt-2">OR</h5>
                     <input type="text" id="roomcode" name="code" placeholder="Enter room code">
-                    <button class="btn btn-send mt-5 px-5 py-2 text-white" style="border-radius:5px;" value="join" name="action"><b>Join Game</b></button>
+                    <button class="btn btn-send mt-2 px-5 py-2 text-white" style="border-radius:5px;" value="join" name="action"><b>Join Game</b></button>
                     <h6 id="message" class="pt-4 text-danger"><i>{{message}}</i></h6>
                 </form>
             </div>
